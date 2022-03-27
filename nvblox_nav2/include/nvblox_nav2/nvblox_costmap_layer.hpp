@@ -38,7 +38,9 @@ public:
     nav2_costmap_2d::Costmap2D & master_grid, int min_i,
     int min_j, int max_i, int max_j) override;
 
-  void reset() override {}
+  void reset() override {current_ = false;}
+
+  bool isClearable() override {return true;}
 
   void sliceCallback(
     const nvblox_msgs::msg::DistanceMapSlice::ConstSharedPtr slice);

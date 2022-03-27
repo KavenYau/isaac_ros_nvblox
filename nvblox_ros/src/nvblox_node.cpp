@@ -147,9 +147,9 @@ NvbloxNode::NvbloxNode()
   // Where to put saved stuff
   output_dir_ = declare_parameter<std::string>("output_dir", output_dir_);
 
-  RCLCPP_INFO(
+  RCLCPP_INFO_STREAM(
     get_logger(),
-    "Outputting results (as requested) to: " + output_dir_);
+    "Outputting results (as requested) to: " << output_dir_);
 
   // Start the message statistics
   depth_frame_statistics_.Start();
@@ -176,16 +176,16 @@ void NvbloxNode::depthImageCallback(
     *depth_img_ptr, this->get_clock()->now().nanoseconds());
   constexpr int kPublishPeriodMs = 10000;
   auto & clk = *this->get_clock();
-  RCLCPP_INFO_THROTTLE(
+  RCLCPP_INFO_STREAM_THROTTLE(
     this->get_logger(), clk, kPublishPeriodMs,
-    "Depth frame statistics: \n" +
+    "Depth frame statistics: \n" <<
     libstatistics_collector::moving_average_statistics::
     StatisticsDataToString(
       depth_frame_statistics_.GetStatisticsResults()));
 
-  RCLCPP_INFO_THROTTLE(
+  RCLCPP_INFO_STREAM_THROTTLE(
     this->get_logger(), clk, kPublishPeriodMs,
-    "Timing statistics: \n" + nvblox::timing::Timing::Print());
+    "Timing statistics: \n" << nvblox::timing::Timing::Print());
 
   timing::Timer ros_total_timer("ros/total");
 
@@ -215,9 +215,9 @@ void NvbloxNode::colorImageCallback(
     *color_image_ptr, this->get_clock()->now().nanoseconds());
   constexpr int kPublishPeriodMs = 10000;
   auto & clk = *this->get_clock();
-  RCLCPP_INFO_THROTTLE(
+  RCLCPP_INFO_STREAM_THROTTLE(
     this->get_logger(), clk, kPublishPeriodMs,
-    "RGB frame statistics: \n" +
+    "RGB frame statistics: \n" <<
     libstatistics_collector::moving_average_statistics::
     StatisticsDataToString(
       rgb_frame_statistics_.GetStatisticsResults()));
@@ -492,7 +492,7 @@ void NvbloxNode::savePly(
   io::outputMeshLayerToPly(
     mapper_->mesh_layer(),
     output_dir_ + "/ros2_mesh.ply");
-  RCLCPP_INFO(get_logger(), "Output PLY files to " + output_dir_);
+  RCLCPP_INFO_STREAM(get_logger(), "Output PLY files to " << output_dir_);
 }
 
 }  // namespace nvblox
